@@ -1,5 +1,6 @@
 import { Component, Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from "../services/account.service";
 
 @Component({
     selector: 'home',
@@ -19,11 +20,11 @@ export class HomeComponent implements OnInit {
          * Check that there's a user connected
          */
         this.user = JSON.parse(localStorage.getItem('user'));
-        if (!this.user) {
+        //if (!this.user) {
 
-            this.router.navigate(['/signIn']);
+        this.router.navigate(['/signIn']);
 
-        }
+        //}
     }
 
 }
