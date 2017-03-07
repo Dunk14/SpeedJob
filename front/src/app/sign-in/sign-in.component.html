@@ -3,29 +3,38 @@
         <div class="col-xs-12 col-sm-offset-4 col-sm-4">
             <h1 class="logo text-align">SpeedJob</h1>
 
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input"
-                       type="text"
-                       [(ngModel)]="email"
-                       id="email">
-                <label class="mdl-textfield__label"
-                       for="email">Entrez votre email IMIE</label>
-            </div>
-            {{email}}
+            <form>
 
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input"
-                       type="password"
-                       [(ngModel)]="password"
-                       id="password">
-                <label class="mdl-textfield__label"
-                       for="password">Mot de passe</label>
-            </div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input"
+                           type="text"
+                           [(ngModel)]="login"
+                           id="login"
+                           name="login">
 
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored connect"
-                    (click)="logIn()">
-                Se connecter
-            </button>
+                    <label class="mdl-textfield__label"
+                           for="login">Entrez votre email IMIE</label>
+                </div>
+                {{email}}
+
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input"
+                           type="password"
+                           [(ngModel)]="password"
+                           id="password"
+                           name="login">
+
+                    <label class="mdl-textfield__label"
+                           for="password">Mot de passe</label>
+                </div>
+
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored connect"
+                        (click)="logIn()"
+                        type="submit">
+                    Se connecter
+                </button>
+
+            </form>
 
         </div>
     </div>

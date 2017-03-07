@@ -13,12 +13,12 @@ export class AccountService {
 
     /**
      * Sign user in
-     * @param email
+     * @param login
      * @param password
      * @returns {Observable<Response>}
      */
-    logIn(email: string, password: string) {
-        let body = 'email=' + email + '&password=' + password;
+    logIn(login: string, password: string) {
+        let body = 'login=' + login + '&password=' + password;
         let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
         let options = new RequestOptions({ headers: headers });
 
@@ -29,7 +29,7 @@ export class AccountService {
      * Sign user out
      */
     logOut() {
-        localStorage.removeItem('user');
+        localStorage.removeItem('speedjob');
         this.router.navigate(['/signIn']);
     }
 

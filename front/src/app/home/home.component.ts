@@ -11,20 +11,21 @@ import { AccountService } from "../services/account.service";
 @Injectable()
 export class HomeComponent implements OnInit {
 
-    private user: any;
-
-    constructor(private router: Router) {}
+    constructor(private accountService: AccountService,
+                private router: Router) {}
 
     ngOnInit() {
         /**
          * Check that there's a user connected
          */
-        this.user = JSON.parse(localStorage.getItem('user'));
-        //if (!this.user) {
+        let user = JSON.parse(localStorage.getItem('speedjob'));
+        if (!user) {
+            this.router.navigate(['/signIn']);
+        }
+    }
 
-        this.router.navigate(['/signIn']);
-
-        //}
+    logOut() {
+        this.accountService.logOut();
     }
 
 }
