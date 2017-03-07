@@ -4,16 +4,33 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
 
-var index = require('./routes/index');
 var account = require('./routes/account');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./config'); // get our config file
+
+var mysql = require('mysql');
+var confBDD = {
+    host     : 'localhost',
+    user     : 'speedjob',
+    password : 'searching4jobs',
+    database : 'speedjob',
+    charset  : 'utf8_general_ci'
+};
+
+// config JWT
+app.set('superSecret', config.secret);
+
+// CORS
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
+    next();
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -23,7 +40,55 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.get('', function (req, res, next) {
+    res.send("Hello !");
+});
+
+app.post('/authenticate', function (req, res, next) {
+
+    if (req.body) {
+        var connection = mysql.createConnection(confBDD);
+
+        validationRequest = 'SELECT COUNT(*) as count FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
+
+        connection.query(validationRequest, function(err1, res1, fields) {
+            if (!err1) {
+                if (res1[0].count == 1) {
+                    uidRequest = 'SELECT uid FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
+
+                    connection.query(uidRequest, function(err2, res2, fields) {
+                        if (!err2) {
+                            // if user is found and password is right
+                            // create a token
+                            var token = jwt.sign({uid: res2[0].uid}, app.get('superSecret'), {
+                                expiresIn: '24h' // expires in 24 hours
+                            });
+
+                            // return the information including token as JSON
+                            res.json({
+                                success: true,
+                                uid: res2[0].uid,
+                                token: token
+                            });
+                        } else {
+                            console.log(err2);
+                        }
+                    });
+
+
+                } else {
+                    res.json(rows);
+                }
+
+
+            } else {
+                console.log(err1);
+            }
+        });
+    }
+
+});
+
 app.use('/account', account);
 
 // catch 404 and forward to error handler
