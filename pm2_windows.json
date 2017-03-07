@@ -1,0 +1,19 @@
+{
+  "apps" : [
+
+    {
+      "name"        : "sj_back",
+      "script"      : "./api/bin/www",
+      "args"        : [
+      ],
+      "watch"       : true,
+      "node_args"   : "--harmony",
+      "merge_logs"  : true,
+      "env": {
+        "NODE_PATH": "",
+        "NODE_ENV": "development"
+      }
+    }
+
+  ]
+}
