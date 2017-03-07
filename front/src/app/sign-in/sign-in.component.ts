@@ -25,7 +25,7 @@ export class SignInComponent implements OnInit {
         /**
          * GET user data from localStorage
          */
-        this.user = JSON.parse(localStorage.getItem('user'));
+        this.user = JSON.parse(localStorage.getItem('SpeedJob'));
 
         /**
          * If user's connected, he's redirected to Home
@@ -57,7 +57,7 @@ export class SignInComponent implements OnInit {
             let user = {
                 id: 0
             };
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('SpeedJob', JSON.stringify(user));
             this.router.navigate(['/home']);
         }
     }
