@@ -5,13 +5,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var account = require('./routes/account');
-
+// Express instance
 var app = express();
 
+// Routes
+var accounts = require('./routes/accounts');
+
+// JSON Web Tokens
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 
+// MySQL Configuration
 var mysql = require('mysql');
 var confBDD = {
     host     : 'localhost',
@@ -40,23 +44,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('', function (req, res, next) {
-    res.send("Hello !");
-});
+var connection = mysql.createConnection(confBDD);
 
-app.post('/authenticate', function (req, res, next) {
+app.post('/authenticate', function (req, res) {
 
     if (req.body) {
-        var connection = mysql.createConnection(confBDD);
-
+        // Request to test credentials
         validationRequest = 'SELECT COUNT(*) as count FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
 
-        connection.query(validationRequest, function(err1, res1, fields) {
+        connection.query(validationRequest, function(err1, res1) {
             if (!err1) {
                 if (res1[0].count == 1) {
+                    // Request to get user ID
                     uidRequest = 'SELECT uid FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
 
-                    connection.query(uidRequest, function(err2, res2, fields) {
+                    connection.query(uidRequest, function(err2, res2) {
                         if (!err2) {
                             // if user is found and password is right
                             // create a token
@@ -89,7 +91,37 @@ app.post('/authenticate', function (req, res, next) {
 
 });
 
-app.use('/account', account);
+app.use('/api', function(req, res, next) {
+    // check header or url parameters or post parameters for token
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    // decode token
+    if (token) {
+
+        // verifies secret and checks exp
+        jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+            if (err) {
+                return res.json({ success: false, message: 'Failed to authenticate token.' });
+            } else {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                next();
+            }
+        });
+
+    } else {
+
+        // if there is no token
+        // return an error
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
+
+    }
+});
+
+app.use('/api/accounts', accounts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -106,7 +138,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send(err);
 });
 
 module.exports = app;
