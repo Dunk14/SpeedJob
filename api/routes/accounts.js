@@ -1,22 +1,16 @@
 var express         = require('express');
+var app             = express();
 var router          = express.Router();
 
 var mysql = require('mysql');
-var confBDD = {
-    host     : 'localhost',
-    user     : 'speedjob',
-    password : 'searching4jobs',
-    database : 'speedjob',
-    charset  : 'utf8_general_ci'
-};
+var confDB = require('../config').database;
 
-var connection = mysql.createConnection(confBDD);
+var connection = mysql.createConnection(confDB);
 
 //
 //  GET /api/accounts/students
 //
 router.get('/students', function(req, res) {
-
     // Request to get all students
     studentsRequest = 'SELECT * FROM etudiant;';
 

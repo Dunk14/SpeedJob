@@ -17,13 +17,7 @@ var config = require('./config'); // get our config file
 
 // MySQL Configuration
 var mysql = require('mysql');
-var confBDD = {
-    host     : 'localhost',
-    user     : 'speedjob',
-    password : 'searching4jobs',
-    database : 'speedjob',
-    charset  : 'utf8_general_ci'
-};
+var confDB = require('./config').database;
 
 // config JWT
 app.set('superSecret', config.secret);
@@ -44,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var connection = mysql.createConnection(confBDD);
+var connection = mysql.createConnection(confDB);
 
 app.post('/authenticate', function (req, res) {
 
@@ -79,7 +73,10 @@ app.post('/authenticate', function (req, res) {
 
 
                 } else {
-                    res.json(rows);
+                    res.json({
+                        success: false,
+                        message: "Provided credentials aren't right"
+                    });
                 }
 
 
