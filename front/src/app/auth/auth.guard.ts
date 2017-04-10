@@ -8,12 +8,16 @@ export class AuthGuard implements CanActivate {
 
     canActivate() {
         if (localStorage.getItem('speedjob')) {
-            // logged in so return true
-            return true;
-        }
+            let sj = JSON.parse(localStorage.getItem('speedjob'));
 
-        // not logged in so redirect to login page
-        this.router.navigate(['/signIn']);
-        return false;
+            if (sj.token) {
+                // logged in so return true
+                return true;
+            }
+        } else {
+            // not logged in so redirect to login page
+            this.router.navigate(['/signIn']);
+            return false;
+        }
     }
 }

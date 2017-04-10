@@ -13,10 +13,12 @@ import { LayoutsModule } from './common/layout/layouts.module';
 import { HomeComponent } from './home/home.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { ProfileComponent } from './profile/profile.component';
+import { StudentsListComponent } from './students-list/students-list.component';
 
 // App services
 import { AuthGuard } from './auth/auth.guard';
 import { AccountService } from'./services/account.service';
+import { StudentService } from './services/student.service';
 
 
 @NgModule({
@@ -24,7 +26,8 @@ import { AccountService } from'./services/account.service';
         AppComponent,
         HomeComponent,
         SignInComponent,
-        ProfileComponent
+        ProfileComponent,
+        StudentsListComponent
     ],
     imports: [
         BrowserModule,
@@ -36,7 +39,8 @@ import { AccountService } from'./services/account.service';
     ],
     providers: [
         AuthGuard,
-        AccountService
+        AccountService,
+        StudentService
     ],
     bootstrap: [AppComponent]
 })

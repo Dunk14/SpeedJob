@@ -1,5 +1,5 @@
-import {Routes, RouterModule} from "@angular/router";
-import {ModuleWithProviders} from '@angular/core';
+import { Routes, RouterModule } from "@angular/router";
+import { ModuleWithProviders } from '@angular/core';
 
 import { basicComponent } from './common/layout/basic.component';
 import { blankComponent } from './common/layout/blank.component';
@@ -8,6 +8,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from "./home/home.component";
 import { SignInComponent } from "./sign-in/sign-in.component";
 import { ProfileComponent } from './profile/profile.component';
+import { StudentsListComponent } from './students-list/students-list.component';
 
 export const ROUTES:Routes = [
     // Main redirect
@@ -26,7 +27,8 @@ export const ROUTES:Routes = [
         path: '', component: basicComponent,
         children: [
             {path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-            {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
+            {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+            {path: 'studentsList', component: StudentsListComponent, canActivate: [AuthGuard] }
         ]
     },
 

@@ -32,12 +32,4 @@ export class AccountService {
         localStorage.removeItem('speedjob');
         this.router.navigate(['/signIn']);
     }
-
-    /**
-     * Get user details
-     */
-    /*getUserDetails(account_id: string) {
-        return this.http.get(this.userDetailsUrl + '/'/!* + account_id*!/)
-            .map(res => res.json());
-    }*/
 }

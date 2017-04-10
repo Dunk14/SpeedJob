@@ -27,12 +27,8 @@ export class SignInComponent implements OnInit {
 
         this.accountService.logIn(this.login, this.password)
          .subscribe((res: Response) => {
-            console.log(res);
-             /**
-             * Account has been validated
-             */
+             // Account has been validated
              if ((res.json()).success == true) {
-
                  localStorage.setItem('speedjob', JSON.stringify(res.json()));
                  this.router.navigate(['/home']);
 

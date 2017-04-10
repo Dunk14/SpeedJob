@@ -1,4 +1,5 @@
 import { Component, Injectable, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'home',
@@ -9,7 +10,11 @@ import { Component, Injectable, OnInit } from '@angular/core';
 @Injectable()
 export class HomeComponent implements OnInit {
 
-    constructor() {}
+    constructor(private router: Router) {}
 
     ngOnInit() {}
+
+    public routingFunction(path: string) {
+        console.log(path);
+    }
 }
