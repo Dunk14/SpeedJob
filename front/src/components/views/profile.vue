@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>SpeedJob Home</h1>
+        <h1>Profil</h1>
     </div>
 </template>
 

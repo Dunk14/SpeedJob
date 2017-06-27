@@ -11,7 +11,7 @@
                         v-for="(item, i) in items"
                         :key="i"
                 >
-                    <v-list-tile value="true">
+                    <v-list-tile value="true" :href="item.href" ripple>
                         <v-list-tile-action>
                             <v-icon light v-html="item.icon"></v-icon>
                         </v-list-tile-action>
@@ -30,54 +30,20 @@
             >
                 <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
             </v-btn>
-            <v-btn
-                    icon
-                    @click.native.stop="clipped = !clipped"
-            >
-                <v-icon>web</v-icon>
-            </v-btn>
-            <v-btn
-                    icon
-                    @click.native.stop="fixed = !fixed"
-            >
-                <v-icon>remove</v-icon>
-            </v-btn>
             <v-toolbar-title v-text="title"></v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn
-                    icon
-                    @click.native.stop="rightDrawer = !rightDrawer"
-            >
-                <v-icon>menu</v-icon>
-            </v-btn>
         </v-toolbar>
         <main>
             <v-container fluid>
                 <v-slide-y-transition mode="out-in">
-                    <v-layout column align-center>
-
+                    <v-layout>
+                        <router-view></router-view>
                     </v-layout>
                 </v-slide-y-transition>
             </v-container>
         </main>
-        <v-navigation-drawer
-                temporary
-                :right="right"
-                v-model="rightDrawer"
-        >
-            <v-list>
-                <v-list-item>
-                    <v-list-tile @click.native="right = !right">
-                        <v-list-tile-action>
-                            <v-icon light>compare_arrows</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-                    </v-list-tile>
-                </v-list-item>
-            </v-list>
-        </v-navigation-drawer>
         <v-footer :fixed="fixed">
-            <span>&copy; 2017</span>
+            <span>&copy; SpeedJob - IMIE 2017</span>
         </v-footer>
     </v-app>
 </template>
@@ -86,15 +52,31 @@
     import 'vuetify/src/stylus/main.styl';
 
     export default {
+        beforeCreate () {
+            if (sessionStorage.getItem('SJlogin') && sessionStorage.getItem('SJtoken')) {
+                this.$http.get('/api/api',
+                {
+                    headers: {'x-access-token': sessionStorage.getItem('SJtoken')}
+                }).then(response =>
+                {
+                    console.log(response)
+                }, response => {
+                    console.log("ERROR", response)
+                })
+            } else {
+                this.$router.push('/sign-in')
+            }
+        },
         data () {
             return {
-                clipped: false,
+                clipped: true,
                 drawer: true,
                 fixed: false,
                 items: [
-                    { icon: 'bubble_chart', title: 'Accueil' }
+                    { icon: 'home', title: 'Accueil', href: '#/home' },
+                    { icon: 'perm_identity', title: 'Profil', href: '#/profile' }
                 ],
-                miniVariant: false,
+                miniVariant: true,
                 right: true,
                 rightDrawer: false,
                 title: 'SpeedJob'

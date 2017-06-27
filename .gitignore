@@ -1,4 +1,10 @@
 api/node_modules
-front/node_modules
-front/angular-cli.json
-front/package.json
+legacy/node_modules
+legacy/angular-cli.json
+legacy/package.json
+.idea/SpeedJob.iml
+.idea/jsLibraryMappings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml

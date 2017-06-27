@@ -4,14 +4,13 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import App from './App'
 import router from './router'
-import VueSession from 'vue-session'
 import VueResource from 'vue-resource'
 import 'bootstrap-grid/dist/grid.min.css'
 import 'animate.css/animate.min.css'
+import 'http-proxy-middleware'
 
 Vue.use(Vuetify)
 Vue.use(VueResource)
-Vue.use(VueSession)
 
 Vue.config.productionTip = false
 
