@@ -1,7 +1,3 @@
-<style>
-
-</style>
-
 <template>
     <div class="container">
         <div class="row">
@@ -19,6 +15,7 @@
                     <mdl-textfield class="col-xs-12"
                                    type="text"
                                    label="Votre identifiant..."
+                                   :class="{hasError: hasError}"
                                    v-model="login"
                                    name="login"
                                    floating-label></mdl-textfield>
@@ -26,6 +23,7 @@
                     <mdl-textfield class="col-xs-12"
                                    type="password"
                                    label="Mot de passe"
+                                   :class="{hasError: hasError}"
                                    v-model="password"
                                    name="password"
                                    floating-label></mdl-textfield>
@@ -49,7 +47,7 @@
                 <button mdl-button
                         mdl-ripple
                         mdl-colored="primary"
-                        @click="logIn()"
+                        @click="subscribe()"
                         type="submit">
                     S'inscrire
                 </button>
@@ -64,5 +62,44 @@
 
     export default {
 
+        data()
+        {
+            return{
+                login: "",
+                password: "",
+                hasError: true
+            }
+        },
+        methods:
+            {
+                logIn()
+                {
+                    let login = this.login;
+                    let password = this.password;
+
+                    this.$http.post('/api/authenticate', {login: login, password: password}).then(response =>
+                    {
+                        if(response.body.success)
+                        {
+                            sessionStorage.setItem("login", login);
+                            sessionStorage.setItem("token", response.body.token);
+                            console.log("SESSION", sessionStorage);
+                        }else
+                        {
+                            console.log("ERROR", this.hasError);
+                            this.hasError = true;
+                        }
+                    }, response =>
+                    {
+                        console.log("ERROR", response);
+                    })
+                }
+            }
     }
+
+
 </script>
+
+<style>
+    .hasError {border-color: red;}
+</style>

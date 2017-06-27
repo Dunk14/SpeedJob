@@ -6,14 +6,23 @@
 
 <script>
   import Vue from 'vue'
+  import VueResource from 'vue-resource'
+  import VueMdl from 'vue-mdl'
+
+  Vue.use(VueMdl)
+  Vue.use(VueResource)
+
+  import 'http-proxy-middleware'
   import 'bootstrap/dist/css/bootstrap.css'
   import 'font-awesome/css/font-awesome.min.css'
   import 'animate.css/animate.min.css'
-  import VueMdl from 'vue-mdl'
-  Vue.use(VueMdl)
+
+
+
+
 
   export default {
-    name: 'app'
+    name: 'app',
   }
 </script>
 

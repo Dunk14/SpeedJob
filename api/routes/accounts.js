@@ -48,7 +48,7 @@ router.get('/students/:id', function(req, res) {
 router.get('/students/search/:search', function(req, res) {
 
     // Request to get one student
-    studentRequest = 'SELECT * FROM etudiant WHERE etud_id = '+req.params.id+';';
+    studentRequest = 'SELECT * FROM etudiant WHERE etud_id = '+req.params.search+';';
 
     connection.query(studentRequest, function(err, res1) {
         if (!err) {

@@ -3,7 +3,7 @@ module.exports = {
     'database': {
         'host': 'localhost',
         'user': 'speedjob',
-        'password': 'searching4jobs',
+        'password': 'azertyoli',
         'database': 'speedjob',
         'charset': 'utf8_general_ci'
     }
