@@ -7,6 +7,7 @@ import Blank from '../components/views/layouts/blank.vue'
 import SignIn from '../components/views/sign-in.vue'
 import Home from '../components/views/home.vue'
 import Profile from '../components/views/profile.vue'
+import LogOut from '../components/views/logOut.vue'
 
 Vue.use(Router)
 
@@ -33,12 +34,16 @@ export default new Router({
         {
             path: 'profile',
             component: Profile
+        },
+        {
+          path: "logOut",
+          component: LogOut
         }
       ]
     },
     {
       path: '*',
       redirect: '/sign-in'
-    }
+    },
   ]
 })

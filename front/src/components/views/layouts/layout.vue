@@ -74,7 +74,8 @@
                 fixed: false,
                 items: [
                     { icon: 'home', title: 'Accueil', href: '#/home' },
-                    { icon: 'perm_identity', title: 'Profil', href: '#/profile' }
+                    { icon: 'perm_identity', title: 'Profil', href: '#/profile' },
+                    { icon: 'power_settings_new', title: 'Déconnexion', href: '#/logOut'}
                 ],
                 miniVariant: true,
                 right: true,

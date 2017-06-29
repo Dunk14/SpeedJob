@@ -22,6 +22,9 @@ var confDB = require('./config').database;
 // config JWT
 app.set('superSecret', config.secret);
 
+//sha1
+var sha1 = require('sha1');
+
 // CORS
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -44,13 +47,13 @@ app.post('/authenticate', function (req, res) {
 
     if (req.body) {
         // Request to test credentials
-        validationRequest = 'SELECT COUNT(*) as count FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
+        validationRequest = 'SELECT COUNT(*) as count FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ sha1(req.body.password) + '";';
 
         connection.query(validationRequest, function(err1, res1) {
             if (!err1) {
                 if (res1[0].count == 1) {
                     // Request to get user ID
-                    uidRequest = 'SELECT uid FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
+                    uidRequest = 'SELECT uid FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ sha1(req.body.password) + '";';
 
                     connection.query(uidRequest, function(err2, res2) {
                         if (!err2) {
@@ -87,6 +90,71 @@ app.post('/authenticate', function (req, res) {
     }
 
 });
+
+app.post('/subscribe', function(req, res) {
+
+    if(req.body)
+    {
+
+        // check email validity
+        //var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var re = /[\d\w]+@[\w]+\.\w{2,3}/;
+        var validateEmail = re.test(req.body.email);
+
+        if(validateEmail)
+        {
+            userSubRequest = "INSERT INTO utilisateur values(NULL, '" + req.body.login + "', '" + sha1(req.body.password) + "')";
+
+            connection.query(userSubRequest, function(err1, res1)
+            {
+                if(!err1)
+                {
+                    entSubRequest = "INSERT INTO entreprise (entr_id, entr_socRea, entr_phone, entr_city, uid) " +
+                        "values(NULL, '"+req.body.socRai+"', "+req.body.tel+", '"+req.body.ville+"', '"+res1.insertId+"')";
+
+                    connection.query(entSubRequest, function(err2, res2)
+                    {
+                        if (!err2) {
+                            // if insert is done create token to proceed to connection
+                            // create a token
+                            var token = jwt.sign({uid: res1.insertId}, app.get('superSecret'), {
+                                expiresIn: '24h' // expires in 24 hours
+                            });
+
+                            // return the information including token as JSON
+                            res.json({
+                                success: true,
+                                uid: res1.insertId,
+                                token: token
+                            });
+                        } else {
+                            console.log(err2);
+                            res.json({
+                                success: false,
+                                query: "2"
+                            })
+                        }
+                    });
+                }else
+                {
+                    res.json({
+                        success: false,
+                        query: "1"
+                    });
+                }
+            });
+        }else
+        {
+            res.json({
+                success: false,
+                message: "Invalid email !"
+            });
+        }
+
+
+
+    }
+})
 
 app.use('/api', function(req, res, next) {
     // check header or url parameters or post parameters for token
