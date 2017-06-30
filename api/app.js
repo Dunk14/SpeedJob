@@ -66,6 +66,7 @@ app.post('/authenticate', function (req, res) {
                                 expiresIn: '24h' // expires in 24 hours
                             });
 
+                            // check account type
                             typeUserRequest = 'SELECT * FROM etudiant WHERE uid = "' + res2[0].uid + '"';
 
                             connection.query(typeUserRequest, function(errEt, resEt) {
@@ -78,6 +79,7 @@ app.post('/authenticate', function (req, res) {
                                         token: token,
                                         account: "student"
                                     });
+                                // if not found in etudiant check entreprise
                                 }else
                                 {
                                     typeUserRequest = 'SELECT * from entreprise WHERE uid = "' + res2[0].uid + "'";
@@ -93,6 +95,7 @@ app.post('/authenticate', function (req, res) {
                                                 token: token,
                                                 account: "society"
                                             });
+                                        // if not found in entreprise check administrateur
                                         }else
                                         {
                                             typeUserRequest = 'SELECT * FROM administrateur WHERE uid = "' + res2[0].uid + "'";
@@ -120,11 +123,6 @@ app.post('/authenticate', function (req, res) {
                                     });
                                 }
                             });
-
-
-
-
-
                         } else {
                             console.log(err2);
                         }
