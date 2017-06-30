@@ -1,12 +1,13 @@
 <style>
-    .hasError
-    {
+    .hasError {
         color: red;
         font-weight: bold;
         margin-bottom: 0px;
     }
 
-    .disclaimer {margin-bottom: 0px;}
+    .disclaimer {
+        margin-bottom: 0px;
+    }
 
 </style>
 
@@ -232,7 +233,7 @@
 
                 if(this.valid)
                 {
-                    this.$http.post("/api/subscribe",
+                    this.$http.post("/back/subscribe",
                         {
                             login: login,
                             password: password,
@@ -244,6 +245,8 @@
                         if (response.body.success) {
                             sessionStorage.setItem("SJlogin", login);
                             sessionStorage.setItem("SJtoken", response.body.token);
+                            sessionStorage.setItem("SJuid", response.body.uid);
+                            sessionStorage.setItem("SJaccount", "society");
                             this.$router.push('/home');
                         } else {
                             console.log("ERROR");

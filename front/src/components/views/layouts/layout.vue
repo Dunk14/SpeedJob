@@ -53,7 +53,7 @@
     import 'vuetify/src/stylus/main.styl';
 
     export default {
-        beforeCreate () {
+        /*beforeCreate () {
             if (sessionStorage.getItem('SJlogin') && sessionStorage.getItem('SJtoken')) {
                 this.$http.get('/api/api',
                 {
@@ -67,7 +67,7 @@
             } else {
                 this.$router.push('/sign-in')
             }
-        },
+        },*/
         data () {
             return {
                 clipped: true,

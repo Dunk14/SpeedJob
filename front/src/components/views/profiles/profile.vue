@@ -1,25 +1,22 @@
 <template>
-    <div>
-        <h1>Profil</h1>
+    <div class="row">
+        <div v-if="account == 'student'">
+            <student></student>
+        </div>
+
     </div>
 </template>
 
 <script>
+    import Student from './student.vue'
     export default {
-        created () {
-            this.$http.post('/api/authenticate', {login: login, password: password}).then(response =>
-            {
-                if (response.body.success) {
-                    sessionStorage.setItem("SJlogin", login);
-                    sessionStorage.setItem("SJtoken", response.body.token);
-                    this.$router.push('/home')
-                } else {
-                    console.log("ERROR", this.hasError);
-                    this.hasError = true;
-                }
-            }, response => {
-                console.log("ERROR", response);
-            })
+        data () {
+            return {
+                account: sessionStorage.getItem('SJaccount')
+            }
+        },
+        components: {
+            'student': Student
         }
     }
 </script>
