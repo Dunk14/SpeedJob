@@ -111,7 +111,6 @@
                     errSocRai: "",
                     errVille: "",
                     errTel: "",
-                    valid: "",
                 },
 
                 // Error boolean for each field (use to activate rule "error" from vuejs)

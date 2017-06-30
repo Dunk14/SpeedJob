@@ -59,16 +59,70 @@ app.post('/authenticate', function (req, res) {
                         if (!err2) {
                             // if user is found and password is right
                             // create a token
+
                             var token = jwt.sign({uid: res2[0].uid}, app.get('superSecret'), {
                                 expiresIn: '24h' // expires in 24 hours
                             });
 
-                            // return the information including token as JSON
-                            res.json({
-                                success: true,
-                                uid: res2[0].uid,
-                                token: token
+                            typeUserRequest = 'SELECT * FROM etudiant WHERE uid = "' + res2[0].uid + '"';
+
+                            connection.query(typeUserRequest, function(errEt, resEt) {
+                                if(!errEt)
+                                {
+                                    // return the information including token as JSON and account étudiant
+                                    res.json({
+                                        success: true,
+                                        uid: res2[0].uid,
+                                        token: token,
+                                        account: "student"
+                                    });
+                                }else
+                                {
+                                    typeUserRequest = 'SELECT * from entreprise WHERE uid = "' + res2[0].uid + "'";
+
+                                    connection.query(typeUserRequest, function(errEn, resEn)
+                                    {
+                                        if(!errEn)
+                                        {
+                                            // return the information including token as JSON and account entreprise
+                                            res.json({
+                                                success: true,
+                                                uid: res2[0].uid,
+                                                token: token,
+                                                account: "society"
+                                            });
+                                        }else
+                                        {
+                                            typeUserRequest = 'SELECT * FROM administrateur WHERE uid = "' + res2[0].uid + "'";
+
+                                            connection.query(typeUserRequest, function(errAd, resAd)
+                                            {
+                                                if(!errAd)
+                                                {
+                                                    // return the information including token as JSON and account entreprise
+                                                    res.json({
+                                                        success: true,
+                                                        uid: res2[0].uid,
+                                                        token: token,
+                                                        account: "admin"
+                                                    });
+                                                }else
+                                                {
+                                                    res.json({
+                                                        success: false,
+                                                        message: "Account type not found !"
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
                             });
+
+
+
+
+
                         } else {
                             console.log(err2);
                         }

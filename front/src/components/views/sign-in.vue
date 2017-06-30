@@ -18,7 +18,7 @@
         text-align: center;
         position: absolute;
         width: 80%;
-        height: 90%;
+        height: 95%;
         top: 2%;
         left: 10%;
         box-shadow: 1px 1px 12px #555;
@@ -177,6 +177,7 @@
                     if (response.body.success) {
                         sessionStorage.setItem("SJlogin", login);
                         sessionStorage.setItem("SJtoken", response.body.token);
+                        sessionStorage.setItem("SJaccount", response.body.account);
                         this.$router.push('/home')
                     } else {
                         console.log("ERROR", this.hasError);
