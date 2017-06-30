@@ -66,10 +66,12 @@ app.post('/authenticate', function (req, res) {
                                 expiresIn: '24h' // expires in 24 hours
                             });
 
-                            typeUserRequest = 'SELECT * FROM etudiant WHERE uid = "' + res2[0].uid + '"';
+                            // check account type
+                            typeUserRequest = 'SELECT * FROM etudiant WHERE uid = ' + res2[0].uid;
 
                             connection.query(typeUserRequest, function(errEt, resEt) {
-                                if(!errEt)
+
+                                if(Object.keys(resEt).length > 0)
                                 {
                                     // return the information including token as JSON and account étudiant
                                     res.json({
@@ -78,13 +80,15 @@ app.post('/authenticate', function (req, res) {
                                         token: token,
                                         account: "student"
                                     });
+                                // if not found in etudiant check entreprise
                                 }else
                                 {
-                                    typeUserRequest = 'SELECT * from entreprise WHERE uid = "' + res2[0].uid + "'";
+                                    typeUserRequest = 'SELECT * from entreprise WHERE uid = ' + res2[0].uid;
 
                                     connection.query(typeUserRequest, function(errEn, resEn)
                                     {
-                                        if(!errEn)
+
+                                        if(Object.keys(resEn).length > 0)
                                         {
                                             // return the information including token as JSON and account entreprise
                                             res.json({
@@ -93,13 +97,14 @@ app.post('/authenticate', function (req, res) {
                                                 token: token,
                                                 account: "society"
                                             });
+                                        // if not found in entreprise check administrateur
                                         }else
                                         {
-                                            typeUserRequest = 'SELECT * FROM administrateur WHERE uid = "' + res2[0].uid + "'";
+                                            typeUserRequest = 'SELECT * FROM administrateur WHERE uid = ' + res2[0].uid;
 
                                             connection.query(typeUserRequest, function(errAd, resAd)
                                             {
-                                                if(!errAd)
+                                                if(Object.keys(resAd).length > 0)
                                                 {
                                                     // return the information including token as JSON and account entreprise
                                                     res.json({
@@ -120,11 +125,6 @@ app.post('/authenticate', function (req, res) {
                                     });
                                 }
                             });
-
-
-
-
-
                         } else {
                             console.log(err2);
                         }

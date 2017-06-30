@@ -8,6 +8,7 @@ import SignIn from '../components/views/sign-in.vue'
 import Home from '../components/views/home.vue'
 import Profile from '../components/views/profiles/profile.vue'
 import LogOut from '../components/views/logOut.vue'
+import SocietyEdit from '../components/views/profiles/society_edit.vue'
 
 Vue.use(Router)
 
@@ -38,6 +39,10 @@ export default new Router({
         {
           path: "logOut",
           component: LogOut
+        },
+        {
+            path: "societyEdit",
+            component: SocietyEdit
         }
       ]
     },
