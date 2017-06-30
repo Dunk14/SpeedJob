@@ -18,7 +18,8 @@
         text-align: center;
         position: absolute;
         width: 80%;
-        height: 95%;
+        height: 780px;
+        margin-bottom: 20px;
         top: 2%;
         left: 10%;
         box-shadow: 1px 1px 12px #555;
@@ -172,9 +173,10 @@
                 let login = this.login;
                 let password = this.password;
 
-                this.$http.post('/api/authenticate', {login: login, password: password}).then(response =>
+                this.$http.post('/back/authenticate', {login: login, password: password}).then(response =>
                 {
                     if (response.body.success) {
+                        sessionStorage.setItem("SJuid", response.body.uid);
                         sessionStorage.setItem("SJlogin", login);
                         sessionStorage.setItem("SJtoken", response.body.token);
                         sessionStorage.setItem("SJaccount", response.body.account);
