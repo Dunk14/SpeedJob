@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang="scss" scoped>
     body {
         background: #f5f6f6;
         background: -moz-linear-gradient(top, #f5f6f6 0%, #dbdce2 21%, #b8bac6 49%, #dddfe3 80%, #f5f6f6 100%);

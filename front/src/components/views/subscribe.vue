@@ -1,4 +1,4 @@
-<style>
+<style scoped>
     .hasError {
         color: red;
         font-weight: bold;
