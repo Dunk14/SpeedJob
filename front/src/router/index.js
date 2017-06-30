@@ -6,7 +6,7 @@ import Blank from '../components/views/layouts/blank.vue'
 
 import SignIn from '../components/views/sign-in.vue'
 import Home from '../components/views/home.vue'
-import Profile from '../components/views/profile.vue'
+import Profile from '../components/views/profiles/profile.vue'
 
 Vue.use(Router)
 
