@@ -8,13 +8,13 @@ var confDB = require('../config').database;
 var connection = mysql.createConnection(confDB);
 
 //
-//  GET /api/accounts/students
+//  GET /api/admin
 //
-router.get('/students', function(req, res) {
-    // Request to get all students
-    studentsRequest = 'SELECT * FROM etudiant;';
+router.get('/', function(req, res) {
+    // Request to get all admins
+    adminsRequest = 'SELECT * FROM administrateur;';
 
-    connection.query(studentsRequest, function(err, res1) {
+    connection.query(adminsRequest, function(err, res1) {
         if (!err) {
             res.json(res1);
         } else {
@@ -25,12 +25,48 @@ router.get('/students', function(req, res) {
 });
 
 //
-//  GET /api/accounts/students/:id
+//  GET /api/admin/count/:id
 //
-router.get('/students/:id', function(req, res) {
+router.get('/count/:id', function(req, res) {
+
+    // Request to get one admin
+    adminsRequest = 'SELECT count(*) as count FROM administrateur WHERE admin_id = '+req.params.id+';';
+
+    connection.query(adminsRequest, function(err, res1) {
+        if (!err) {
+            res.json(res1[0]);
+        } else {
+            console.log(err);
+        }
+    });
+
+});
+
+//
+//  GET /api/admin/count/:id
+//
+router.get('/:id', function(req, res) {
 
     // Request to get one student
-    studentRequest = 'SELECT * FROM etudiant WHERE etud_id = '+req.params.id+';';
+    adminsRequest = 'SELECT * FROM administrateur WHERE admin_id = '+req.params.id+';';
+
+    connection.query(adminsRequest, function(err, res1) {
+        if (!err) {
+            res.json(res1[0]);
+        } else {
+            console.log(err);
+        }
+    });
+
+});
+
+//
+//  GET /api/societies/search/:search
+//
+router.get('/search/:search', function(req, res) {
+
+    // Request to get one student
+    studentRequest = 'SELECT * FROM entreprise WHERE entr_lastname = "'+req.params.search+'" OR etud_firstname = "'+req.params.search+'";';
 
     connection.query(studentRequest, function(err, res1) {
         if (!err) {
@@ -43,46 +79,28 @@ router.get('/students/:id', function(req, res) {
 });
 
 //
-//  GET /api/accounts/students/search/:search
+//  POST /api/societies
 //
-router.get('/students/search/:search', function(req, res) {
-
-    // Request to get one student
-    studentRequest = 'SELECT * FROM etudiant WHERE etud_id = '+req.params.search+';';
-
-    connection.query(studentRequest, function(err, res1) {
-        if (!err) {
-            res.json(res1[0]);
-        } else {
-            console.log(err);
-        }
-    });
-
-});
-
-//
-//  POST /api/accounts/students
-//
-router.post('/students/', function(req, res) {
+router.post('/', function(req, res) {
 
     // Request to create a new user
     // TODO
     /*studentRequest = 'SELECT * FROM etudiant WHERE etud_id = '+req.params.id+';';
 
-    connection.query(studentRequest, function(err, res1) {
-        if (!err) {
-            res.json(res1[0]);
-        } else {
-            console.log(err);
-        }
-    });*/
+     connection.query(studentRequest, function(err, res1) {
+     if (!err) {
+     res.json(res1[0]);
+     } else {
+     console.log(err);
+     }
+     });*/
     res.send("POST");
 });
 
 //
-//  PUT /api/accounts/students
+//  PUT /api/societies
 //
-router.put('/students/:id', function(req, res) {
+router.put('/:id', function(req, res) {
 
     // Request to update a user
     // TODO
@@ -99,9 +117,9 @@ router.put('/students/:id', function(req, res) {
 });
 
 //
-//  DELETE /api/accounts/students
+//  DELETE /api/societies
 //
-router.delete('/students/:id', function(req, res) {
+router.delete('/:id', function(req, res) {
 
     // Request to update a user
     // TODO

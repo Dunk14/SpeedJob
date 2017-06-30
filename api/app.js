@@ -9,7 +9,9 @@ var bodyParser = require('body-parser');
 var app = express();
 
 // Routes
-var accounts = require('./routes/accounts');
+var students = require('./routes/students');
+var societies = require('./routes/societies');
+var admins = require('./routes/admins');
 
 // JSON Web Tokens
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -48,7 +50,7 @@ app.post('/authenticate', function (req, res) {
 
         connection.query(validationRequest, function(err1, res1) {
             if (!err1) {
-                if (res1[0].count == 1) {
+                if (res1[0].count === 1) {
                     // Request to get user ID
                     uidRequest = 'SELECT uid FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
 
@@ -118,7 +120,9 @@ app.use('/api', function(req, res, next) {
     }
 });
 
-app.use('/api/accounts', accounts);
+app.use('/api/students', students);
+app.use('/api/societies', societies);
+app.use('/api/admins', admins);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
