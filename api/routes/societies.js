@@ -30,7 +30,11 @@ router.get('/', function(req, res) {
 router.get('/count/:id', function(req, res) {
 
     // Request to get one society
-    societiesRequest = 'SELECT count(*) as count FROM entreprise WHERE entr_id = '+req.params.id+';';
+    societiesRequest = 'SELECT count(*) as count FROM entreprise WHERE uid = '+req.params.id+';';
+
+    res.json({
+        id: req.params.id
+    });
 
     connection.query(societiesRequest, function(err, res1) {
         if (!err) {
@@ -48,7 +52,7 @@ router.get('/count/:id', function(req, res) {
 router.get('/:id', function(req, res) {
 
     // Request to get one society
-    societiesRequest = 'SELECT * FROM entreprise WHERE entr_id = '+req.params.id+';';
+    societiesRequest = 'SELECT * FROM entreprise WHERE uid = '+req.params.id+';';
 
     connection.query(societiesRequest, function(err, res1) {
         if (!err) {
