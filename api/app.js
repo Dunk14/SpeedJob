@@ -24,6 +24,9 @@ var confDB = require('./config').database;
 // config JWT
 app.set('superSecret', config.secret);
 
+//sha1
+var sha1 = require('sha1');
+
 // CORS
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -46,28 +49,82 @@ app.post('/authenticate', function (req, res) {
 
     if (req.body) {
         // Request to test credentials
-        validationRequest = 'SELECT COUNT(*) as count FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
+        validationRequest = 'SELECT COUNT(*) as count FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ sha1(req.body.password) + '";';
 
         connection.query(validationRequest, function(err1, res1) {
             if (!err1) {
                 if (res1[0].count === 1) {
                     // Request to get user ID
-                    uidRequest = 'SELECT uid FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ req.body.password + '";';
+                    uidRequest = 'SELECT uid FROM utilisateur WHERE usr_login = "'+ req.body.login +'" AND usr_password = "'+ sha1(req.body.password) + '";';
 
                     connection.query(uidRequest, function(err2, res2) {
                         if (!err2) {
                             // if user is found and password is right
                             // create a token
+
                             var token = jwt.sign({uid: res2[0].uid}, app.get('superSecret'), {
                                 expiresIn: '24h' // expires in 24 hours
                             });
 
-                            // return the information including token as JSON
-                            res.json({
-                                success: true,
-                                uid: res2[0].uid,
-                                token: token
+                            typeUserRequest = 'SELECT * FROM etudiant WHERE uid = "' + res2[0].uid + '"';
+
+                            connection.query(typeUserRequest, function(errEt, resEt) {
+                                if(!errEt)
+                                {
+                                    // return the information including token as JSON and account étudiant
+                                    res.json({
+                                        success: true,
+                                        uid: res2[0].uid,
+                                        token: token,
+                                        account: "student"
+                                    });
+                                }else
+                                {
+                                    typeUserRequest = 'SELECT * from entreprise WHERE uid = "' + res2[0].uid + "'";
+
+                                    connection.query(typeUserRequest, function(errEn, resEn)
+                                    {
+                                        if(!errEn)
+                                        {
+                                            // return the information including token as JSON and account entreprise
+                                            res.json({
+                                                success: true,
+                                                uid: res2[0].uid,
+                                                token: token,
+                                                account: "society"
+                                            });
+                                        }else
+                                        {
+                                            typeUserRequest = 'SELECT * FROM administrateur WHERE uid = "' + res2[0].uid + "'";
+
+                                            connection.query(typeUserRequest, function(errAd, resAd)
+                                            {
+                                                if(!errAd)
+                                                {
+                                                    // return the information including token as JSON and account entreprise
+                                                    res.json({
+                                                        success: true,
+                                                        uid: res2[0].uid,
+                                                        token: token,
+                                                        account: "admin"
+                                                    });
+                                                }else
+                                                {
+                                                    res.json({
+                                                        success: false,
+                                                        message: "Account type not found !"
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
                             });
+
+
+
+
+
                         } else {
                             console.log(err2);
                         }
@@ -89,6 +146,71 @@ app.post('/authenticate', function (req, res) {
     }
 
 });
+
+app.post('/subscribe', function(req, res) {
+
+    if(req.body)
+    {
+
+        // check email validity
+        //var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var re = /[\d\w]+@[\w]+\.\w{2,3}/;
+        var validateEmail = re.test(req.body.email);
+
+        if(validateEmail)
+        {
+            userSubRequest = "INSERT INTO utilisateur values(NULL, '" + req.body.login + "', '" + sha1(req.body.password) + "')";
+
+            connection.query(userSubRequest, function(err1, res1)
+            {
+                if(!err1)
+                {
+                    entSubRequest = "INSERT INTO entreprise (entr_id, entr_socRea, entr_phone, entr_city, uid) " +
+                        "values(NULL, '"+req.body.socRai+"', "+req.body.tel+", '"+req.body.ville+"', '"+res1.insertId+"')";
+
+                    connection.query(entSubRequest, function(err2, res2)
+                    {
+                        if (!err2) {
+                            // if insert is done create token to proceed to connection
+                            // create a token
+                            var token = jwt.sign({uid: res1.insertId}, app.get('superSecret'), {
+                                expiresIn: '24h' // expires in 24 hours
+                            });
+
+                            // return the information including token as JSON
+                            res.json({
+                                success: true,
+                                uid: res1.insertId,
+                                token: token
+                            });
+                        } else {
+                            console.log(err2);
+                            res.json({
+                                success: false,
+                                query: "2"
+                            })
+                        }
+                    });
+                }else
+                {
+                    res.json({
+                        success: false,
+                        query: "1"
+                    });
+                }
+            });
+        }else
+        {
+            res.json({
+                success: false,
+                message: "Invalid email !"
+            });
+        }
+
+
+
+    }
+})
 
 app.use('/api', function(req, res, next) {
     // check header or url parameters or post parameters for token

@@ -10,8 +10,9 @@
                 <v-list-item
                         v-for="(item, i) in items"
                         :key="i"
+                        :class="item.class"
                 >
-                    <v-list-tile value="true" :href="item.href" ripple>
+                    <v-list-tile value="true" :href="item.href"  ripple>
                         <v-list-tile-action>
                             <v-icon light v-html="item.icon"></v-icon>
                         </v-list-tile-action>
@@ -73,8 +74,9 @@
                 drawer: true,
                 fixed: false,
                 items: [
-                    { icon: 'home', title: 'Accueil', href: '#/home' },
-                    { icon: 'perm_identity', title: 'Profil', href: '#/profile' }
+                    { icon: 'home', title: 'Accueil', href: '#/home', class: "" },
+                    { icon: 'perm_identity', title: 'Profil', href: '#/profile', class: "" },
+                    { icon: 'power_settings_new', title: 'Déconnexion', href: '#/logOut', class: "bottom"}
                 ],
                 miniVariant: true,
                 right: true,
@@ -86,4 +88,12 @@
 </script>
 
 <style lang="scss">
+
+    .bottom
+    {
+        position: absolute;
+        bottom:0px;
+        width:100%;
+    }
+
 </style>
