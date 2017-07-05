@@ -68,7 +68,7 @@
             </div>
 
             <div>
-                <v-btn dark flat @click="edit()">EDITER</v-btn>
+                <v-btn dark flat @click.native="edit()">EDITER</v-btn>
             </div>
 
 
@@ -96,7 +96,8 @@
         },
         methods: {
             edit() {
-                this.$router.push('/societyEdit');
+                console.log("ROUTTTTEEE");
+                this.$router.push('/SocietyEdit');
             }
         }
     }

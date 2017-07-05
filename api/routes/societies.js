@@ -104,20 +104,34 @@ router.post('/', function(req, res) {
 //
 //  PUT /api/societies
 //
-router.put('/:id', function(req, res) {
+router.put('/:uid', function(req, res) {
 
     // Request to update a user
     // TODO
-    /*studentRequest = 'SELECT * FROM etudiant WHERE etud_id = '+req.params.id+';';
 
-     connection.query(studentRequest, function(err, res1) {
+    let updateFields = "";
+
+    for(field in req.body)
+    {
+        updateFields += ' ' + field + " = '" + req.body[field] + "',";
+    }
+
+
+    updateFields = updateFields.substring(0, updateFields.length-1);
+
+    societyRequest = 'UPDATE entreprise SET' +
+        updateFields +
+        ' WHERE uid = '+req.params.uid  ;
+
+   // res.json({query: societyRequest});
+
+     connection.query(societyRequest, function(err, res1) {
      if (!err) {
-     res.json(res1[0]);
+        res.json({success: true});
      } else {
-     console.log(err);
+         res.json({success: false});
      }
-     });*/
-    res.send("PUT");
+     });
 });
 
 //
