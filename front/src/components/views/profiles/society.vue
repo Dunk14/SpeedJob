@@ -1,77 +1,148 @@
+<style>
+
+    .society
+    {
+        font-size: 24px;
+    }
+
+    .society__null {
+        opacity: 0.6;
+    }
+
+    .society__icon, .edit__icon {
+        font-size: 50px;
+        margin-bottom: 10px;
+    }
+
+    .edit__icon {
+        border-radius: 50px;
+        padding: 10px;
+        margin-left: 20px;
+        opacity: 0.3;
+        transition: all .3s linear;
+    }
+
+    .edit__icon:hover {
+        background-color: rgba(220,220,220,0.6);
+        cursor: pointer;
+        opacity: 1;
+    }
+
+</style>
+
+
 <template>
     <div>
 
-        <div v-if="society">
-            <h1>{{society.entr_socRea}}</h1>
-
-            <hr />
+        <div v-if="society" class="society">
+            <h2><v-icon class="society__icon">business_center</v-icon>{{society.entr_socRea | capitalize}} <v-icon class="edit__icon" v-on:click="edit()">mode_edit</v-icon></h2>
 
             <div>
-                <ul>
-                    <li>
-                        Contact :
-                        <span v-if="society.entr_contact != null">{{society.entr_contact}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Téléphone :
-                        <span v-if="society.entr_phone != null">{{society.entr_phone}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Email :
-                        <span v-if="society.entr_mail != null">{{society.entr_mail}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Date de création :
-                        <span v-if="society.entr_crea != null">{{society.entr_crea}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Nombre d'employés :
-                        <span v-if="society.entr_nbEmp != null">{{society.entr_nbEmp}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Description :
-                        <span v-if="society.entr_resume != null">{{society.entr_resume}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Ville :
-                        <span v-if="society.entr_city != null">{{society.entr_city}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Zone d'activité :
-                        <span v-if="society.entr_actArea != null">{{society.entr_actArea}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Adresse :
-                        <span v-if="society.entr_streetNum">
-                            {{society.entr_streetNum}}
-                            <span v-if="society.entr_street != null">
-                                {{society.entr_street}}
+
+                <div class="col-xs-12">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <span v-if="society.entr_resume">{{society.entr_resume | capitalize}}</span>
+                            <span v-else class="society__null">Aucune description</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="contact__icon">supervisor_account</v-icon>
+                            <span v-if="society.entr_contact">{{society.entr_contact | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="phone__icon">call</v-icon>
+                            <span v-if="society.entr_phone">{{society.entr_phone | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="mail__icon">email</v-icon>
+                            <span v-if="society.entr_mail">{{society.entr_mail | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="crea__icon">event</v-icon>
+                            <span v-if="society.entr_crea">Création : {{society.entr_crea | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="nbEmp__icon">perm_identity</v-icon>
+                            <span v-if="society.entr_nbEmp">{{society.entr_nbEmp | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="location__icon">location_city</v-icon>
+                            <span v-if="society.entr_city">{{society.entr_city | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="actArea__icon">business</v-icon>
+                            <span v-if="society.entr_actArea">{{society.entr_actArea | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="adresse__icon">location_city</v-icon>
+                            <span v-if="society.entr_streetNum">{{society.entr_streetNum | capitalize}}
+                                <span v-if="society.entr_street">
+                                    {{society.entr_street}}
+                                </span>
                             </span>
-                        </span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
 
-                        <span v-else>Non renseigné</span>
-                    </li>
-                    <li>
-                        Site Web :
-                        <span v-if="society.entr_webSite != null">{{society.entr_webSite}}</span>
-                        <span v-else>Non renseigné</span>
-                    </li>
-                </ul>
+                <div class="col-xs-12 col-sm-6">
+                    <v-card class="elevation-0">
+                        <v-card-text>
+                            <v-icon class="webSite__icon">link</v-icon>
+                            <span v-if="society.entr_webSite">{{society.entr_webSite | capitalize}}</span>
+                            <span v-else class="society__null">Non renseigné</span>
+                        </v-card-text>
+                    </v-card>
+                </div>
             </div>
-
-            <div>
-                <v-btn dark flat @click.native="edit()">EDITER</v-btn>
-            </div>
-
-
         </div>
     </div>
 </template>
@@ -103,5 +174,3 @@
     }
 </script>
 
-<style>
-</style>
